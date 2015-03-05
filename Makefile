@@ -1,13 +1,16 @@
-CXXFLAGS+=-fPIC
+CXXFLAGS+=-fPIC -g
 
 all: main
 
 libhello.so: hello.o
 	$(CXX) $(CXXFLAGS) -shared -o libhello.so hello.o
 
-main: main.o libhello.so
-	$(CXX) main.o -lhello -L. -o main
+libdyn.so: dyn.o
+	$(CXX) $(CXXFLAGS) -shared -o libdyn.so dyn.o
+
+main: main.o libhello.so libdyn.so
+	$(CXX) main.o -lhello -ldl -L. -o main
 
 .PHONY: clean
 clean:
-	@rm -f *.so *.o
+	@rm -f *.so *.o main
